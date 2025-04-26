@@ -13,7 +13,7 @@
 .quiz-selection-container h2 {
   font-size: 2rem;
   font-weight: 700;
-  color: #2563EB;
+  color: #6c5ce7;
   margin-bottom: 1.5rem;
   text-align: center;
 }
@@ -24,7 +24,7 @@
 }
 
 .quiz-selection-container button {
-  background-color: #2563EB;
+  background-color: #6c5ce7;
   color: #FFFFFF;
   font-size: 1.1rem;
   font-weight: 600;
@@ -36,7 +36,7 @@
 }
 
 .quiz-selection-container button:hover {
-  background-color: #10B981;
+  background-color: black;
   transform: translateY(-2px);
 }
 

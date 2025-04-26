@@ -13,7 +13,7 @@
 .quiz-container h2 {
   font-size: 1.8rem;
   font-weight: 700;
-  color: #2563EB;
+  color: #6c5ce7;
   margin-bottom: 1.5rem;
   text-align: center;
 }
@@ -29,20 +29,20 @@
   font-size: 1.1rem;
   font-weight: 600;
   padding: 1rem;
-  border: 2px solid #2563EB;
+  border: 2px solid #6c5ce7;
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
 }
 
 .options-container button:hover {
-  background-color: #2563EB;
+  background-color: #6c5ce7;
   color: #FFFFFF;
   transform: translateY(-2px);
 }
 
 .quiz-container button:not(.options-container button) {
-  background-color: #2563EB;
+  background-color: #6c5ce7;
   color: #FFFFFF;
   font-size: 1.1rem;
   font-weight: 600;
