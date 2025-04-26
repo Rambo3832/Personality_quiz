@@ -1,65 +1,78 @@
+/* Quiz.css */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
 .quiz-container {
+  font-family: 'Inter', sans-serif;
+  background-color: #F3F4F6;
+  min-height: 100vh;
+  padding: 2rem 1rem;
   max-width: 800px;
-  margin: 3rem auto;
-  padding: 2rem;
-  background: linear-gradient(135deg, #6c5ce7, #a363d9);
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  text-align: center;
-  color: white;
+  margin: 0 auto;
 }
 
 .quiz-container h2 {
-  font-size: 2rem;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #2563EB;
   margin-bottom: 1.5rem;
+  text-align: center;
 }
 
 .options-container {
-  display: flex;
-  flex-direction: column;
+  display: grid;
   gap: 1rem;
 }
 
-.option-btn {
+.options-container button {
+  background-color: #FFFFFF;
+  color: #1F2937;
+  font-size: 1.1rem;
+  font-weight: 600;
   padding: 1rem;
-  width: 100%;
-  border: none;
-  background: white;
-  color: #6c5ce7;
-  font-size: 1.1rem;
-  border-radius: 25px;
+  border: 2px solid #2563EB;
+  border-radius: 8px;
   cursor: pointer;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
 }
 
-.option-btn:hover {
+.options-container button:hover {
+  background-color: #2563EB;
+  color: #FFFFFF;
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.next-btn {
-  margin-top: 1.5rem;
-  padding: 1rem 2rem;
+.quiz-container button:not(.options-container button) {
+  background-color: #2563EB;
+  color: #FFFFFF;
   font-size: 1.1rem;
-  background-color: #fff;
-  color: #6c5ce7;
+  font-weight: 600;
+  padding: 0.75rem 2rem;
   border: none;
-  border-radius: 25px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: block;
+  margin: 2rem auto 0;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.next-btn:hover {
+.quiz-container button:not(.options-container button):hover {
+  background-color: #10B981;
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-@media (max-width: 768px) {
-  .quiz-container {
-    padding: 1.5rem;
-  }
-  
+/* Responsive adjustments */
+@media (max-width: 600px) {
   .quiz-container h2 {
-    font-size: 1.8rem;
+    font-size: 1.5rem;
+  }
+
+  .options-container button {
+    font-size: 1rem;
+    padding: 0.8rem;
+  }
+
+  .quiz-container button:not(.options-container button) {
+    padding: 0.6rem 1.5rem;
+    font-size: 1rem;
   }
 }

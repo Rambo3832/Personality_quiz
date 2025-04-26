@@ -1,0 +1,53 @@
+/* QuizSelection.css */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+.quiz-selection-container {
+  font-family: 'Inter', sans-serif;
+  background-color: #F3F4F6;
+  min-height: 100vh;
+  padding: 2rem 1rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.quiz-selection-container h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #2563EB;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.quiz-selection-container .grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.quiz-selection-container button {
+  background-color: #2563EB;
+  color: #FFFFFF;
+  font-size: 1.1rem;
+  font-weight: 600;
+  padding: 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.quiz-selection-container button:hover {
+  background-color: #10B981;
+  transform: translateY(-2px);
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .quiz-selection-container h2 {
+    font-size: 1.7rem;
+  }
+
+  .quiz-selection-container button {
+    font-size: 1rem;
+    padding: 0.8rem;
+  }
+}

@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import "./QuizSelection.css"; // Import your CSS file for styling
 
 const quizTypes = [
   { id: "office", name: "Office Personality" },
