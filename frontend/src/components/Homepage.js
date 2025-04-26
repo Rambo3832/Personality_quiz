@@ -1,6 +1,6 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import './Homepage.css';
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import "./Homepage.css";
 
 const Homepage = () => {
   const navigate = useNavigate();
@@ -9,10 +9,12 @@ const Homepage = () => {
     <div className="homepage">
       <div className="hero-section">
         <h1>Discover Your Personality Type</h1>
-        <p>Take our comprehensive personality quiz and learn more about yourself</p>
-        <button 
+        <p>
+          Take our comprehensive personality quiz and learn more about yourself
+        </p>
+        <button
           className="start-quiz-btn"
-          onClick={() => navigate('/quiz')}
+          onClick={() => navigate("/quiz-selection")}
         >
           Start Quiz
         </button>

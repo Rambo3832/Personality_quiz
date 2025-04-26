@@ -13,6 +13,7 @@ import Login from "./components/Login";
 import Signup from "./components/Signup";
 import Quiz from "./components/Quiz";
 import Results from "./components/Results";
+import QuizSelection from "./components/QuizSelection";
 import "./App.css";
 
 function App() {
@@ -42,6 +43,10 @@ function App() {
             element={user ? <Homepage /> : <Navigate to="/login" />}
           />
           <Route
+            path="/quiz-selection"
+            element={user ? <QuizSelection /> : <Navigate to="/login" />}
+          />
+          <Route
             path="/quiz"
             element={user ? <Quiz /> : <Navigate to="/login" />}
           />
@@ -57,6 +62,7 @@ function App() {
             path="/signup"
             element={!user ? <Signup /> : <Navigate to="/" />}
           />
+          <Route path="*" element={<div>404: Page Not Found</div>} />
         </Routes>
       </div>
     </Router>
