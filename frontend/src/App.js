@@ -40,29 +40,39 @@ function App() {
         <Routes>
           <Route
             path="/"
+            key="home"
             element={user ? <Homepage /> : <Navigate to="/login" />}
           />
           <Route
             path="/quiz-selection"
+            key="quiz-selection"
             element={user ? <QuizSelection /> : <Navigate to="/login" />}
           />
           <Route
             path="/quiz"
+            key="quiz"
             element={user ? <Quiz /> : <Navigate to="/login" />}
           />
           <Route
             path="/results"
+            key="results"
             element={user ? <Results /> : <Navigate to="/login" />}
           />
           <Route
             path="/login"
+            key="login"
             element={!user ? <Login /> : <Navigate to="/" />}
           />
           <Route
             path="/signup"
+            key="signup"
             element={!user ? <Signup /> : <Navigate to="/" />}
           />
-          <Route path="*" element={<div>404: Page Not Found</div>} />
+          <Route
+            path="*"
+            key="not-found"
+            element={<div>404: Page Not Found</div>}
+          />
         </Routes>
       </div>
     </Router>
