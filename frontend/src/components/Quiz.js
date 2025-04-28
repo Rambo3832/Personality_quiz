@@ -2,6 +2,20 @@ import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "./Quiz.css";
 
+// Import local images for background
+import officeImage from "./assets/office.jpg";
+import familyImage from "./assets/family.jpeg";
+import friendshipImage from "./assets/friendship.jpg";
+import romanticImage from "./assets/love.jpg";
+
+// Map quiz types to background images and positions
+const backgroundImages = {
+  office: { src: officeImage, position: "center top" },
+  family: { src: familyImage, position: "center top" },
+  friendship: { src: friendshipImage, position: "center top" },
+  romantic: { src: romanticImage, position: "center 70%" }, // Shift down to show couple
+};
+
 const quizQuestions = {
   office: [
     {
@@ -381,9 +395,13 @@ const Quiz = () => {
   const quizType = location.state?.quizType || "office";
   const questions = quizQuestions[quizType];
 
+  // Set background image based on quizType
+  const { src: backgroundImage, position: backgroundPosition } =
+    backgroundImages[quizType];
+
   const handleAnswerClick = (option) => {
     const newAnswers = [...answers];
-    newAnswers[currentQuestion] = option; // Update or set the answer for the current question
+    newAnswers[currentQuestion] = option;
     setAnswers(newAnswers);
     if (currentQuestion < questions.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
@@ -399,25 +417,32 @@ const Quiz = () => {
   };
 
   return (
-    <div className="quiz-container max-w-2xl mx-auto p-6">
-      <h2 className="text-xl font-semibold mb-4">
-        {questions[currentQuestion].question}
-      </h2>
-      <div className="options-container grid grid-cols-1 gap-2">
+    <div
+      className="quiz-container"
+      style={{
+        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(${backgroundImage})`,
+        backgroundSize: "100% auto",
+        backgroundPosition: backgroundPosition, // Dynamic position per quiz
+        backgroundAttachment: "fixed",
+        backgroundRepeat: "no-repeat",
+      }}
+    >
+      <h2 className="quiz-question">{questions[currentQuestion].question}</h2>
+      <div className="options-container">
         {questions[currentQuestion].options.map((option, index) => (
           <button
             key={index}
-            className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded transition duration-300"
+            className="option-button"
             onClick={() => handleAnswerClick(option)}
           >
             {option}
           </button>
         ))}
       </div>
-      <div className="navigation-buttons flex justify-between mt-4">
+      <div className="navigation-buttons">
         {currentQuestion > 0 && (
           <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            className="nav-button prev-button"
             onClick={handlePreviousClick}
           >
             Previous
@@ -425,7 +450,7 @@ const Quiz = () => {
         )}
         {currentQuestion < questions.length - 1 && (
           <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            className="nav-button next-button"
             onClick={() => setCurrentQuestion(currentQuestion + 1)}
           >
             Next
