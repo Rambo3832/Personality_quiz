@@ -1,12 +1,34 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import "./QuizSelection.css"; // Import your CSS file for styling
+import "./QuizSelection.css";
+
+// Import local images
+import officeImage from "./assets/office.jpg";
+import familyImage from "./assets/family.jpeg";
+import friendshipImage from "./assets/friendship.jpg";
+import romanticImage from "./assets/love.jpg";
 
 const quizTypes = [
-  { id: "office", name: "Office Personality" },
-  { id: "family", name: "Family Personality" },
-  { id: "friendship", name: "Friendship/Social Personality" },
-  { id: "romantic", name: "Romantic Personality" },
+  {
+    id: "office",
+    name: "Office Personality",
+    image: officeImage,
+  },
+  {
+    id: "family",
+    name: "Family Personality",
+    image: familyImage,
+  },
+  {
+    id: "friendship",
+    name: "Friendship/Social Personality",
+    image: friendshipImage,
+  },
+  {
+    id: "romantic",
+    name: "Romantic Personality",
+    image: romanticImage,
+  },
 ];
 
 const QuizSelection = () => {
@@ -17,18 +39,19 @@ const QuizSelection = () => {
   };
 
   return (
-    <div className="quiz-selection-container max-w-2xl mx-auto p-6">
-      <h2 className="text-2xl font-bold mb-6 text-center">
-        Choose a Personality Quiz
-      </h2>
-      <div className="grid grid-cols-1 gap-4">
+    <div className="quiz-selection-container">
+      <h2 className="quiz-title">Discover Your Personality</h2>
+      <div className="quiz-grid">
         {quizTypes.map((quiz) => (
           <button
             key={quiz.id}
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300"
+            className="quiz-card"
             onClick={() => handleQuizSelect(quiz.id)}
           >
-            {quiz.name}
+            <div className="quiz-image-container">
+              <img src={quiz.image} alt={quiz.name} className="quiz-image" />
+            </div>
+            <span className="quiz-name">{quiz.name}</span>
           </button>
         ))}
       </div>
