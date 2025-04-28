@@ -11,17 +11,17 @@ import romanticImage from "./assets/love.jpg";
 const quizTypes = [
   {
     id: "office",
-    name: "Office Personality",
+    name: "Work Personality",
     image: officeImage,
   },
   {
     id: "family",
-    name: "Family Personality",
+    name: "Family Life",
     image: familyImage,
   },
   {
     id: "friendship",
-    name: "Friendship/Social Personality",
+    name: "Social Personality",
     image: friendshipImage,
   },
   {
@@ -41,6 +41,16 @@ const QuizSelection = () => {
   return (
     <div className="quiz-selection-container">
       <h2 className="quiz-title">Discover Your Personality</h2>
+      <div className="quiz-info">
+        <p className="quiz-statistic">
+          565,900 TESTS TAKEN IN THE LAST 30 DAYS
+        </p>
+        <p className="quiz-description">
+          This free personality test reveals who you really are. Discover the 4
+          personalities created by Jhanvi & Ansh, test your personality type,
+          and find your strengths.
+        </p>
+      </div>
       <div className="quiz-grid">
         {quizTypes.map((quiz) => (
           <button
@@ -54,6 +64,13 @@ const QuizSelection = () => {
             <span className="quiz-name">{quiz.name}</span>
           </button>
         ))}
+      </div>
+      <div className="quiz-footer">
+        <p className="quiz-instructions">
+          To take the personality test, mark your answers based on how well each
+          statement describes you. From each pair, choose the phrase that
+          describes you best.
+        </p>
       </div>
     </div>
   );
