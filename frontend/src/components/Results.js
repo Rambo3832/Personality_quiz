@@ -272,124 +272,251 @@ const determinePersonality = (answers, quizType) => {
     });
   });
 
-  const percentages = Object.keys(scores).reduce((acc, type) => {
-    acc[type] = ((scores[type] / totalQuestions) * 100).toFixed(0);
-    return acc;
-  }, {});
+  const percentages = new Map(Object.entries(scores));
+  const totalScore = Array.from(percentages.values()).reduce((sum, val) => sum + val, 0);
+  percentages.forEach((val, key) => {
+    const percentage = totalScore === 0 ? 0 : Math.round((val / totalScore) * 100);
+    percentages.set(key, percentage);
+  });
 
-  const primaryType = Object.keys(percentages).reduce((a, b) =>
-    percentages[a] > percentages[b] ? a : b
-  );
+  const primaryType = Array.from(percentages.entries()).reduce((a, b) =>
+    a[1] > b[1] ? a : b
+  )[0];
 
-  return { percentages, primaryType };
+  return {
+    percentages: Object.fromEntries(percentages),
+    primaryType,
+  };
 };
 
 const Results = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const answers = location.state?.answers || [];
-  const quizType = location.state?.quizType || "office";
+  const quizType = location.state?.quizType || null;
   const personality =
-    answers.length > 0 ? determinePersonality(answers, quizType) : null;
+    answers.length > 0 && quizType ? determinePersonality(answers, quizType) : null;
 
-  const [attempts, setAttempts] = useState([]);
   const [userId, setUserId] = useState(null);
+  const [allAttempts, setAllAttempts] = useState({
+    office: [],
+    family: [],
+    friendship: [],
+    romantic: [],
+  });
 
   useEffect(() => {
     const currentUser = auth.currentUser;
     if (currentUser) {
       setUserId(currentUser.uid);
-      let storedResults =
-        JSON.parse(
-          localStorage.getItem(`quizAttempts_${currentUser.uid}_${quizType}`)
-        ) || [];
+      const quizTypes = ["office", "family", "friendship", "romantic"];
+      const updatedAttempts = { ...allAttempts };
 
-      if (
-        personality &&
-        (!storedResults.length ||
-          storedResults[storedResults.length - 1].primaryType !==
-            personality.primaryType)
-      ) {
-        storedResults.push(personality);
-        localStorage.setItem(
-          `quizAttempts_${currentUser.uid}_${quizType}`,
-          JSON.stringify(storedResults)
-        );
+      quizTypes.forEach((type) => {
+        const storedResults =
+          JSON.parse(
+            localStorage.getItem(`quizAttempts_${currentUser.uid}_${type}`)
+          ) || [];
+        updatedAttempts[type] = storedResults;
+      });
+
+      if (personality) {
+        const currentTypeAttempts = updatedAttempts[quizType];
+        if (
+          !currentTypeAttempts.length ||
+          currentTypeAttempts[currentTypeAttempts.length - 1].primaryType !==
+            personality.primaryType
+        ) {
+          updatedAttempts[quizType] = [...currentTypeAttempts, personality];
+          localStorage.setItem(
+            `quizAttempts_${currentUser.uid}_${quizType}`,
+            JSON.stringify(updatedAttempts[quizType])
+          );
+        }
       }
 
-      setAttempts(storedResults);
+      setAllAttempts(updatedAttempts);
     }
   }, [personality, quizType]);
 
-  const pieData = personality
-    ? {
-        labels: Object.keys(personality.percentages),
-        datasets: [
-          {
-            data: Object.values(personality.percentages),
-            backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0"],
-            hoverBackgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0"],
-          },
-        ],
-      }
-    : null;
+  const pieData = (result) =>
+    result
+      ? {
+          labels: Object.keys(result.percentages).filter(
+            (type) => result.percentages[type] > 0
+          ),
+          datasets: [
+            {
+              data: Object.values(result.percentages).filter((val) => val > 0),
+              backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0"],
+              hoverBackgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0"],
+            },
+          ],
+        }
+      : null;
+
+  const quizTypes = ["office", "family", "friendship", "romantic"];
 
   return (
-    <div className="results-container max-w-3xl mx-auto p-6">
-      <h2 className="text-2xl font-bold mb-4">Personality Type Meanings</h2>
-      <ul className="mb-6">
-        {Object.entries(personalityDescriptions)
-          .filter(([type]) =>
-            Object.keys(personalityTypes[quizType]).includes(type)
-          )
-          .map(([type, desc]) => (
-            <li key={type} className="mb-2">
-              <strong>{type}:</strong> {desc}
-            </li>
-          ))}
-      </ul>
-      <hr className="my-6" />
-      <h2 className="text-2xl font-bold mb-4">
-        Your {quizType.charAt(0).toUpperCase() + quizType.slice(1)} Quiz Result
-      </h2>
-      {userId && attempts.length === 0 && !personality ? (
-        <p>No quiz attempts yet. Please take the quiz first!</p>
-      ) : (
-        attempts.map((result, index) => (
-          <div key={index} className="mb-6">
-            <p className="mb-4">
-              The user is mostly a <strong>{result.primaryType}</strong>, but
-              also{" "}
-              {Object.keys(result.percentages)
-                .filter(
-                  (type) =>
-                    type !== result.primaryType && result.percentages[type] > 0
-                )
-                .join("-minded and ")}
-              -minded!
-            </p>
-            {pieData && (
-              <div className="max-w-md mx-auto">
-                <Pie
-                  data={pieData}
-                  options={{ responsive: true, maintainAspectRatio: false }}
-                />
-              </div>
-            )}
-            <ul className="mt-4">
-              {Object.entries(result.percentages).map(([type, percentage]) => (
+    <div className="results-container">
+      {/* Personality Meanings Section */}
+      {quizType ? (
+        // After taking a quiz, show only the meanings for that quiz type
+        <fieldset className="personality-meanings">
+          <legend>{quizType.charAt(0).toUpperCase() + quizType.slice(1)} Personality Types</legend>
+          <ul>
+            {Object.entries(personalityDescriptions)
+              .filter(([type]) =>
+                Object.keys(personalityTypes[quizType]).includes(type)
+              )
+              .map(([type, desc]) => (
                 <li key={type}>
-                  {type}: {percentage}%
+                  <strong>{type}:</strong> {desc}
                 </li>
               ))}
+          </ul>
+        </fieldset>
+      ) : (
+        // Default view: Show meanings for all quiz types
+        quizTypes.map((type) => (
+          <fieldset key={type} className="personality-meanings">
+            <legend>{type.charAt(0).toUpperCase() + type.slice(1)} Personality Types</legend>
+            <ul>
+              {Object.entries(personalityDescriptions)
+                .filter(([personalityType]) =>
+                  Object.keys(personalityTypes[type]).includes(personalityType)
+                )
+                .map(([personalityType, desc]) => (
+                  <li key={personalityType}>
+                    <strong>{personalityType}:</strong> {desc}
+                  </li>
+                ))}
             </ul>
+          </fieldset>
+        ))
+      )}
+
+      {/* Results Section */}
+      {quizType && personality ? (
+        // After taking a quiz, show the current result first, then all attempts
+        <>
+          <div className="results-box">
+            <h2>Your {quizType.charAt(0).toUpperCase() + quizType.slice(1)} Quiz Result</h2>
+            <div className="attempt">
+              <h3>Current Attempt</h3>
+              <p>
+                You are mostly a <strong>{personality.primaryType}</strong>, but also{" "}
+                {Object.keys(personality.percentages)
+                  .filter(
+                    (type) =>
+                      type !== personality.primaryType &&
+                      personality.percentages[type] > 0
+                  )
+                  .join("-minded and ")}
+                -minded!
+              </p>
+              {pieData(personality) && (
+                <div className="pie-chart">
+                  <Pie
+                    data={pieData(personality)}
+                    options={{ responsive: true, maintainAspectRatio: false }}
+                  />
+                </div>
+              )}
+              <ul>
+                {Object.entries(personality.percentages).map(([type, percentage]) => (
+                  <li key={type}>
+                    {type}: {percentage}%
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          {/* Show all attempts for all quiz types, starting with the current quiz type */}
+          {quizTypes.map((type) => (
+            <div key={type} className="results-box">
+              <h2>{type.charAt(0).toUpperCase() + type.slice(1)} Quiz Results</h2>
+              {allAttempts[type].length === 0 ? (
+                <p>No attempts yet for this quiz type.</p>
+              ) : (
+                allAttempts[type].map((result, index) => (
+                  <div key={index} className="attempt">
+                    <h3>Attempt #{index + 1}</h3>
+                    <p>
+                      You are mostly a <strong>{result.primaryType}</strong>, but also{" "}
+                      {Object.keys(result.percentages)
+                        .filter(
+                          (t) =>
+                            t !== result.primaryType && result.percentages[t] > 0
+                        )
+                        .join("-minded and ")}
+                      -minded!
+                    </p>
+                    {pieData(result) && (
+                      <div className="pie-chart">
+                        <Pie
+                          data={pieData(result)}
+                          options={{ responsive: true, maintainAspectRatio: false }}
+                        />
+                      </div>
+                    )}
+                    <ul>
+                      {Object.entries(result.percentages).map(([t, percentage]) => (
+                        <li key={t}>
+                          {t}: {percentage}%
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))
+              )}
+            </div>
+          ))}
+        </>
+      ) : (
+        // Default view: Show all attempts for all quiz types
+        quizTypes.map((type) => (
+          <div key={type} className="results-box">
+            <h2>{type.charAt(0).toUpperCase() + type.slice(1)} Quiz Results</h2>
+            {allAttempts[type].length === 0 ? (
+              <p>No attempts yet for this quiz type.</p>
+            ) : (
+              allAttempts[type].map((result, index) => (
+                <div key={index} className="attempt">
+                  <h3>Attempt #{index + 1}</h3>
+                  <p>
+                    You are mostly a <strong>{result.primaryType}</strong>, but also{" "}
+                    {Object.keys(result.percentages)
+                      .filter(
+                        (t) => t !== result.primaryType && result.percentages[t] > 0
+                      )
+                      .join("-minded and ")}
+                    -minded!
+                  </p>
+                  {pieData(result) && (
+                    <div className="pie-chart">
+                      <Pie
+                        data={pieData(result)}
+                        options={{ responsive: true, maintainAspectRatio: false }}
+                      />
+                    </div>
+                  )}
+                  <ul>
+                    {Object.entries(result.percentages).map(([t, percentage]) => (
+                      <li key={t}>
+                        {t}: {percentage}%
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))
+            )}
           </div>
         ))
       )}
-      <button
-        className="mt-6 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        onClick={() => navigate("/")}
-      >
+
+      <button className="home-button" onClick={() => navigate("/")}>
         Go Back to Home
       </button>
     </div>

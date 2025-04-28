@@ -1,90 +1,217 @@
 /* Results.css */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
 
 .results-container {
   font-family: 'Inter', sans-serif;
-  background-color: #F3F4F6;
+  background: linear-gradient(135deg, #fef3f2 0%, #d1fae5 100%); /* Quiz theme gradient */
   min-height: 100vh;
-  padding: 2rem 1rem;
-  max-width: 800px;
-  margin: 0 auto;
+  width: 100vw;
+  padding: 4rem 1rem;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  box-sizing: border-box;
+  box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.2); /* Subtle overlay */
 }
 
-.results-container h2 {
-  font-size: 2rem;
+/* Personality Meanings Fieldset */
+.personality-meanings {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid #60a5fa; /* Blue border */
+  border-radius: 10px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  max-width: 700px;
+  width: 100%;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 1s ease-in;
+}
+
+.personality-meanings legend {
+  font-size: 1.5rem;
   font-weight: 700;
-  color: #6c5ce7;
-  margin-bottom: 1.5rem;
-  text-align: center;
+  background: linear-gradient(90deg, #1e3a8a 0%, #60a5fa 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 0 0.5rem;
 }
 
-.results-container ul {
+.personality-meanings ul {
   list-style: none;
   padding: 0;
+  display: grid;
+  gap: 1rem;
 }
 
-.results-container li {
+.personality-meanings li {
   font-size: 1.1rem;
-  color: #1F2937;
-  margin-bottom: 0.5rem;
+  color: #1f2937;
+  text-align: justify;
 }
 
-.results-container li strong {
-  color: #6c5ce7;
+.personality-meanings li strong {
+  color: #6c5ce7; /* Purple accent */
+  font-weight: 600;
 }
 
-.results-container hr {
-  border: 0;
-  border-top: 1px solid #D1D5DB;
-  margin: 2rem 0;
+/* Results Box */
+.results-box {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid #60a5fa;
+  border-radius: 10px;
+  padding: 2rem;
+  max-width: 700px;
+  width: 100%;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 1s ease-in;
+  margin-bottom: 2rem;
 }
 
-.results-container p {
-  font-size: 1.1rem;
-  color: #1F2937;
+.results-box h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  background: linear-gradient(90deg, #1e3a8a 0%, #60a5fa 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.attempt {
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #d1d5db; /* Subtle divider between attempts */
+}
+
+.attempt:last-child {
+  border-bottom: none; /* Remove divider for the last attempt */
+}
+
+.attempt h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #6c5ce7; /* Purple accent */
   margin-bottom: 1rem;
   text-align: center;
 }
 
-.results-container .max-w-md {
-  background-color: #FFFFFF;
-  padding: 1.5rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  margin: 0 auto 2rem;
+.attempt p {
+  font-size: 1.1rem;
+  color: #1f2937;
+  margin-bottom: 1rem;
+  text-align: center;
 }
 
-.results-container button {
-  background-color: #6c5ce7;
-  color: #FFFFFF;
-  font-size: 1.1rem;
+.attempt p strong {
+  color: #6c5ce7; /* Purple accent */
+}
+
+.pie-chart {
+  max-width: 300px;
+  margin: 0 auto 1.5rem;
+  padding: 1rem;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.attempt ul {
+  list-style: none;
+  padding: 0;
+  text-align: center;
+}
+
+.attempt li {
+  font-size: 1rem;
+  color: #1f2937;
+  margin-bottom: 0.5rem;
+}
+
+/* Home Button */
+.home-button {
+  background: linear-gradient(90deg, #1e3a8a 0%, #60a5fa 100%); /* Quiz nav-button style */
+  color: #ffffff;
+  font-size: 1rem;
   font-weight: 600;
   padding: 0.75rem 2rem;
   border: none;
   border-radius: 8px;
   cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
   display: block;
   margin: 2rem auto;
-  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.results-container button:hover {
-  background-color: #10B981;
+.home-button:hover {
+  background: linear-gradient(90deg, #1e40af 0%, #3b82f6 100%);
   transform: translateY(-2px);
 }
 
+/* Fade-in animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 /* Responsive adjustments */
-@media (max-width: 600px) {
-  .results-container h2 {
-    font-size: 1.7rem;
+@media (max-width: 768px) {
+  .results-container {
+    padding: 2rem 1rem;
   }
 
-  .results-container p, .results-container li {
+  .personality-meanings legend,
+  .results-box h2 {
+    font-size: 1.75rem;
+  }
+
+  .personality-meanings li,
+  .attempt p {
     font-size: 1rem;
   }
 
-  .results-container button {
+  .attempt h3 {
+    font-size: 1.3rem;
+  }
+
+  .home-button {
     padding: 0.6rem 1.5rem;
-    font-size: 1rem;
+    font-size: 0.9rem;
+  }
+
+  .pie-chart {
+    max-width: 250px;
+  }
+}
+
+@media (max-width: 600px) {
+  .personality-meanings legend,
+  .results-box h2 {
+    font-size: 1.5rem;
+  }
+
+  .personality-meanings li,
+  .attempt p {
+    font-size: 0.95rem;
+  }
+
+  .attempt h3 {
+    font-size: 1.2rem;
+  }
+
+  .attempt li {
+    font-size: 0.9rem;
+  }
+
+  .home-button {
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  .pie-chart {
+    max-width: 200px;
   }
 }
