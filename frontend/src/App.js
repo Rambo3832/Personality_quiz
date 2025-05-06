@@ -41,7 +41,7 @@ function App() {
           <Route
             path="/"
             key="home"
-            element={user ? <Homepage /> : <Navigate to="/login" />}
+            element={<Homepage user={user} />}
           />
           <Route
             path="/quiz-selection"
