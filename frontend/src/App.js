@@ -39,6 +39,17 @@ function App() {
         <Navbar />
         <Routes>
           <Route
+            path="/login"
+            key="login"
+            element={<Navigate to="/" />}
+          />
+          <Route
+            path="/signup"
+            key="signup"
+            element={<Navigate to="/" />}
+          />
+
+          <Route
             path="/"
             key="home"
             element={<Homepage user={user} />}
