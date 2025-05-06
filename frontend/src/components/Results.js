@@ -456,7 +456,23 @@ const Results = () => {
                 <div className="pie-chart">
                   <Pie
                     data={pieData(personality)}
-                    options={{ responsive: true, maintainAspectRatio: false }}
+                    options={{
+                      responsive: true,
+                      maintainAspectRatio: false,
+                      plugins: {
+                        legend: {
+                          display: true,
+                          position: "top",
+                          labels: {
+                            boxWidth: 20,
+                            padding: 10,
+                            font: {
+                              size: 12,
+                            },
+                          },
+                        },
+                      },
+                    }}
                   />
                 </div>
               )}
@@ -505,6 +521,19 @@ const Results = () => {
                           options={{
                             responsive: true,
                             maintainAspectRatio: false,
+                            plugins: {
+                              legend: {
+                                display: true,
+                                position: "top",
+                                labels: {
+                                  boxWidth: 20,
+                                  padding: 10,
+                                  font: {
+                                    size: 12,
+                                  },
+                                },
+                              },
+                            },
                           }}
                         />
                       </div>

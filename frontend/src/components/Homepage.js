@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth, googleProvider } from "../firebase"; // Import googleProvider
+import { auth, googleProvider } from "../firebase";
 import { signInWithPopup } from "firebase/auth";
 import Login from "./Login";
-import Signup from "./Signup"; // Import Signup component
+import Signup from "./Signup";
 import "./Homepage.css";
 
 const Homepage = ({ user }) => {
@@ -13,13 +13,44 @@ const Homepage = ({ user }) => {
   const [activeTab, setActiveTab] = useState("login");
   const [googleError, setGoogleError] = useState("");
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  // Slideshow data
+  const slides = [
+    {
+      image:
+        "https://images.unsplash.com/photo-1513694203232-719a280e022f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80",
+      heading: "Discover Yourself with AI-Powered Personality Insights.",
+      subheading: "Take the Quiz. Understand Your Mind. Unlock Your Potential.",
+    },
+    {
+      image:
+        "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80",
+      heading: "Discover Yourself with AI-Powered Personality Insights.",
+      subheading: "Take the Quiz. Understand Your Mind. Unlock Your Potential.",
+    },
+    {
+      image:
+        "https://images.unsplash.com/photo-1553481187-2a6e5e5f8f9a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80",
+      heading: "Discover Yourself with AI-Powered Personality Insights.",
+      subheading: "Take the Quiz. Understand Your Mind. Unlock Your Potential.",
+    },
+  ];
+
+  // Slideshow logic
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentSlide((prevSlide) => (prevSlide + 1) % slides.length);
+    }, 5000); // Change slide every 5 seconds
+    return () => clearInterval(interval);
+  }, [slides.length]);
 
   const handleStartQuiz = () => {
     if (user) {
       navigate("/quiz-selection");
     } else {
       setShowModal(true);
-      setActiveTab("login"); // Default to login tab
+      setActiveTab("login");
       setGoogleError("");
     }
   };
@@ -66,35 +97,106 @@ const Homepage = ({ user }) => {
   return (
     <div className="homepage">
       <div className="hero-section">
-        <h1>Discover Your Personality Type</h1>
+        <div className="slideshow">
+          {slides.map((slide, index) => (
+            <div
+              key={index}
+              className={`slide ${index === currentSlide ? "active" : ""}`}
+              style={{ backgroundImage: `url(${slide.image})` }}
+            >
+              <div className="slide-content">
+                <h1>{slide.heading}</h1>
+                <p>{slide.subheading}</p>
+                <button className="start-quiz-btn" onClick={handleStartQuiz}>
+                  Start Quiz
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="slideshow-dots">
+          {slides.map((_, index) => (
+            <span
+              key={index}
+              className={`dot ${index === currentSlide ? "active" : ""}`}
+              onClick={() => setCurrentSlide(index)}
+            ></span>
+          ))}
+        </div>
+      </div>
+
+      {/* Tests Taken Section */}
+      <div className="tests-taken-section">
+        <h2>565,900 TESTS TAKEN IN THE LAST 30 DAYS</h2>
         <p>
-          Take our comprehensive personality quiz and learn more about yourself
+          This free personality test gives you accurate scores for the Big Five
+          personality traits. See exactly how you score for Openness,
+          Conscientiousness, Extraversion, Agreeableness, and Neuroticism with
+          this scientific personality assessment.
         </p>
-        <button className="start-quiz-btn" onClick={handleStartQuiz}>
-          Start Quiz
+      </div>
+
+      {/* Feature Highlights Section */}
+      <div className="feature-highlights">
+        <div className="highlight-card">
+          <span className="highlight-icon">🔍</span>
+          <h3>Personality Analysis</h3>
+          <p>Get accurate insights into your personalit trats</p>
+        </div>
+        <div className="highlight-card">
+          <span className="highlight-icon">🎯</span>
+          <h3>Personalized Tips</h3>
+          <p>Receive advice tailord to your unique profile</p>
+        </div>
+        <div className="highlight-card">
+          <span className="highlight-icon">⚡</span>
+          <h3>Quick & Interactive</h3>
+          <p>Enjoy a fast and enganng quiz experience</p>
+        </div>
+      </div>
+
+      {/* CTA Section */}
+      <div className="cta-section">
+        <h2>Ready to Unlock Your Personality?</h2>
+        <button className="cta-btn" onClick={handleStartQuiz}>
+          Get Started
         </button>
       </div>
-      <div className="features-section">
-        <div className="feature-card">
-          <h3>Quick & Easy</h3>
-          <p>Complete the quiz in under 10 minutes</p>
+
+      {/* Footer Section with Social Media Links */}
+      <footer className="footer">
+        <h3 className="footer-text">Want to Explore More? Connect With Us!</h3>
+        <div className="social-links">
+          <a
+            href="https://linkedin.com"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span className="social-icon">🖇️</span> LinkedIn
+          </a>
+          <a
+            href="https://instagram.com"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span className="social-icon">📸</span> Instagram
+          </a>
+          <a
+            href="https://facebook.com"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span className="social-icon">📘</span> Facebook
+          </a>
         </div>
-        <div className="feature-card">
-          <h3>Accurate Results</h3>
-          <p>Get detailed insights about your personality</p>
-        </div>
-        <div className="feature-card">
-          <h3>Free Analysis</h3>
-          <p>Receive your personality profile instantly</p>
-        </div>
-      </div>
+      </footer>
 
       {/* Login/Signup Modal */}
       {showModal && (
         <div className="modal" onClick={handleModalClick}>
           <div className="modal-content">
             <span className="close-btn" onClick={closeModal}>
-              &times;
+              ×
             </span>
             <div className="modal-tabs">
               <button
