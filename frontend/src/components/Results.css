@@ -1,157 +1,147 @@
 /* Results.css */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
 
 .results-container {
   font-family: 'Inter', sans-serif;
-  background: linear-gradient(135deg, #fef3f2 0%, #d1fae5 100%); /* Quiz theme gradient */
+  background: linear-gradient(135deg, #fef3f2 0%, #d1fae5 100%);
   min-height: 100vh;
   width: 100vw;
-  padding: 4rem 1rem;
+  padding: 3rem 1rem;
   margin: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-  position: relative;
   box-sizing: border-box;
-  box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.2); /* Subtle overlay */
 }
 
-/* Personality Meanings Container */
 .personality-meanings-container {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 2rem;
-  max-width: 1440px;
+  gap: 1.5rem;
+  max-width: 1200px;
   width: 100%;
   margin-bottom: 2rem;
 }
 
-/* Personality Meanings Fieldset */
 .personality-meanings {
-  background: rgba(255, 255, 255, 0.95);
-  border: 1px solid #60a5fa; /* Blue border */
-  border-radius: 10px;
-  padding: 1.5rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  animation: fadeIn 1s ease-in;
+  background: #ffffff;
+  border: 1px solid #93c5fd;
+  border-radius: 8px;
+  padding: 1.25rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  animation: fadeIn 0.8s ease-in;
 }
 
 .personality-meanings legend {
-  font-size: 1.5rem;
-  font-weight: 700;
-  background: linear-gradient(90deg, #1e3a8a 0%, #60a5fa 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #1e3a8a;
   padding: 0 0.5rem;
+  text-align: justify;
 }
 
 .personality-meanings ul {
   list-style: none;
   padding: 0;
   display: grid;
-  gap: 1rem;
+  gap: 0.75rem;
 }
 
 .personality-meanings li {
-  font-size: 1.1rem;
+  font-size: 1rem;
   color: #1f2937;
   text-align: justify;
 }
 
 .personality-meanings li strong {
-  color: #6c5ce7; /* Purple accent */
+  color: #000000;
   font-weight: 600;
 }
 
-/* Results Box Container */
 .results-box-container {
   display: flex;
   flex-direction: row;
-  gap: 2rem;
-  max-width: 1440px;
+  gap: 1.5rem;
+  max-width: 1200px;
   width: 100%;
-  justify-content: space-between;
+  justify-content: center;
   margin-bottom: 2rem;
 }
 
-/* Results Box */
 .results-box {
-  background: rgba(255, 255, 255, 0.95);
-  border: 1px solid #60a5fa;
-  border-radius: 10px;
-  padding: 2rem;
-  flex: 1; /* Each box takes equal space */
-  min-width: 250px; /* Minimum width to prevent squishing */
-  max-width: 320px; /* Reduced max-width to fit four boxes */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  animation: fadeIn 1s ease-in;
+  background: #ffffff;
+  border: 1px solid #93c5fd;
+  border-radius: 8px;
+  padding: 1.5rem;
+  flex: 1;
+  min-width: 280px;
+  max-width: 350px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  animation: fadeIn 0.8s ease-in;
 }
 
 .results-box h2 {
-  font-size: 1.5rem; /* Reduced font size to fit narrower boxes */
-  font-weight: 700;
-  background: linear-gradient(90deg, #1e3a8a 0%, #60a5fa 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  text-align: center;
-  margin-bottom: 1.5rem;
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #1e3a8a;
+  text-align: justify;
+  margin-bottom: 1.25rem;
+  line-height: 1.4;
+  white-space: nowrap; /* Prevent unwanted wrapping */
 }
 
 .attempt {
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid #d1d5db; /* Subtle divider between attempts */
+  border-bottom: 2px solid #93c5fd;
 }
 
 .attempt:last-child {
-  border-bottom: none; /* Remove divider for the last attempt */
+  border-bottom: none;
 }
 
 .attempt h3 {
-  font-size: 1.3rem; /* Adjusted for narrower boxes */
+  font-size: 1.25rem;
   font-weight: 600;
-  color: #6c5ce7; /* Purple accent */
-  margin-bottom: 1rem;
-  text-align: center;
+  color: #1e3a8a;
+  margin-bottom: 0.75rem;
+  text-align: justify;
 }
 
 .attempt p {
-  font-size: 1rem; /* Adjusted for narrower boxes */
+  font-size: 1rem;
   color: #1f2937;
   margin-bottom: 1rem;
-  text-align: center;
+  text-align: justify;
 }
 
 .attempt p strong {
-  color: #6c5ce7; /* Purple accent */
+  color: #000000;
 }
 
 .pie-chart {
-  max-width: 250px; /* Increased from 200px to ensure space for legend */
-  margin: 0 auto 1.5rem;
-  padding: 1rem;
-  background: #ffffff;
+  max-width: 280px;
+  margin: 0 auto 1.25rem;
+  padding: 0.75rem;
+  background: #f8fafc;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .attempt ul {
   list-style: none;
   padding: 0;
-  text-align: center;
+  text-align: justify;
 }
 
 .attempt li {
-  font-size: 0.9rem; /* Adjusted for narrower boxes */
+  font-size: 0.95rem;
   color: #1f2937;
   margin-bottom: 0.5rem;
+  text-align: justify;
 }
 
-/* Home Button */
 .home-button {
-  background: linear-gradient(90deg, #1e3a8a 0%, #60a5fa 100%); /* Quiz nav-button style */
+  background: #1e3a8a;
   color: #ffffff;
   font-size: 1rem;
   font-weight: 600;
@@ -160,29 +150,27 @@
   border-radius: 8px;
   cursor: pointer;
   transition: background 0.3s ease, transform 0.2s ease;
-  display: block;
   margin: 2rem auto;
 }
 
 .home-button:hover {
-  background: linear-gradient(90deg, #1e40af 0%, #3b82f6 100%);
+  background: #1e40af;
   transform: translateY(-2px);
 }
 
-/* Fade-in animation */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Responsive adjustments */
 @media (max-width: 1024px) {
   .results-box {
-    max-width: 280px; /* Slightly smaller for medium screens */
+    max-width: 320px;
   }
 
   .results-box h2 {
-    font-size: 1.4rem;
+    font-size: 1.5rem;
+    white-space: normal; /* Allow wrapping on smaller screens */
   }
 
   .attempt h3 {
@@ -190,7 +178,7 @@
   }
 
   .pie-chart {
-    max-width: 200px; /* Increased from 180px */
+    max-width: 260px;
   }
 }
 
@@ -201,48 +189,36 @@
 
   .personality-meanings-container {
     grid-template-columns: 1fr;
-    gap: 1.5rem;
+    gap: 1rem;
   }
 
   .results-box-container {
     flex-direction: column;
-    gap: 1.5rem;
-    justify-content: center;
+    gap: 1rem;
+    align-items: center;
   }
 
   .results-box {
-    max-width: 100%; /* Full width on smaller screens */
-    min-width: 0; /* Allow full flexibility */
+    max-width: 100%;
+    min-width: 0;
   }
 
   .personality-meanings legend,
   .results-box h2 {
-    font-size: 1.75rem;
-  }
-
-  .personality-meanings li,
-  .attempt p {
-    font-size: 1rem;
-  }
-
-  .attempt h3 {
-    font-size: 1.3rem;
-  }
-
-  .home-button {
-    padding: 0.6rem 1.5rem;
-    font-size: 0.9rem;
+    font-size: 1.4rem;
+    white-space: normal;
   }
 
   .pie-chart {
-    max-width: 300px; /* Increased from 250px */
+    max-width: 300px;
   }
 }
 
 @media (max-width: 600px) {
   .personality-meanings legend,
   .results-box h2 {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
+    white-space: normal;
   }
 
   .personality-meanings li,
@@ -251,7 +227,7 @@
   }
 
   .attempt h3 {
-    font-size: 1.2rem;
+    font-size: 1.15rem;
   }
 
   .attempt li {
@@ -259,11 +235,11 @@
   }
 
   .home-button {
-    padding: 0.5rem 1rem;
-    font-size: 0.85rem;
+    padding: 0.6rem 1.5rem;
+    font-size: 0.9rem;
   }
 
   .pie-chart {
-    max-width: 250px; /* Increased from 200px */
+    max-width: 260px;
   }
 }

@@ -211,38 +211,22 @@ const personalityTypes = {
 };
 
 const personalityDescriptions = {
-  Leader:
-    "Leaders take charge, organize, and guide others effectively in the workplace.",
-  Visionary:
-    "Visionaries bring creativity and innovative ideas to the table at work.",
-  "Team Player":
-    "Team Players foster collaboration and emotional connection in teams.",
-  Analyst:
-    "Analysts focus on details, logic, and thorough analysis in professional settings.",
-  Caregiver:
-    "Caregivers are nurturing, empathetic, and supportive, creating a warm family environment.",
-  Protector:
-    "Protectors are strong and vigilant, safeguarding their family’s well-being.",
-  Rebel:
-    "Rebels bring unconventional ideas and bold choices to family dynamics.",
-  Independent:
-    "Independents prioritize their own space and decisions within the family.",
-  "Loyal Friend":
-    "Loyal Friends are reliable and steadfast, always there for their friends.",
-  "Party Enthusiast":
-    "Party Enthusiasts bring high energy and fun to social settings.",
-  "Wise Counselor":
-    "Wise Counselors offer thoughtful advice and deep connections in friendships.",
-  "Lone Wolf":
-    "Lone Wolves enjoy their own company and maintain independence in social groups.",
-  "Romantic Dreamer":
-    "Romantic Dreamers value deep emotional connections and heartfelt moments.",
-  "Independent Soul":
-    "Independent Souls maintain personal freedom while cherishing their relationship.",
-  "Passionate Partner":
-    "Passionate Partners bring intensity and excitement to their romantic life.",
-  "Logical Lover":
-    "Logical Lovers approach relationships with thoughtfulness and stability.",
+  Leader: "Guides and organizes teams with confidence.",
+  Visionary: "Inspires with creative and bold ideas.",
+  "Team Player": "Builds strong team bonds through collaboration.",
+  Analyst: "Focuses on details and logical solutions.",
+  Caregiver: "Nurtures family with warmth and care.",
+  Protector: "Keeps family safe and secure.",
+  Rebel: "Brings fun and unique ideas to family life.",
+  Independent: "Values personal space in family settings.",
+  "Loyal Friend": "Always reliable and supportive in friendships.",
+  "Party Enthusiast": "Brings energy and fun to social groups.",
+  "Wise Counselor": "Offers thoughtful advice to friends.",
+  "Lone Wolf": "Enjoys independence in social settings.",
+  "Romantic Dreamer": "Seeks deep emotional connections in love.",
+  "Independent Soul": "Values freedom in relationships.",
+  "Passionate Partner": "Brings excitement and intensity to romance.",
+  "Logical Lover": "Approaches love with practical stability.",
 };
 
 const determinePersonality = (answers, quizType) => {
@@ -309,12 +293,11 @@ const Results = () => {
   });
 
   useEffect(() => {
-    // Compute personality when answers or quizType change
     if (answers.length > 0 && quizType) {
       const computedPersonality = determinePersonality(answers, quizType);
       setPersonality(computedPersonality);
     } else {
-      setPersonality(null); // Default to null if no valid state, but no redirect
+      setPersonality(null);
     }
   }, [answers, quizType]);
 
@@ -381,9 +364,7 @@ const Results = () => {
 
   return (
     <div className="results-container">
-      {/* Personality Meanings Section */}
       {quizType ? (
-        // After taking a quiz, show only the meanings for that quiz type
         <div className="personality-meanings-container">
           <fieldset className="personality-meanings">
             <legend>
@@ -397,14 +378,13 @@ const Results = () => {
                 )
                 .map(([type, desc]) => (
                   <li key={type}>
-                    <strong>{type}:</strong> {desc}
+                    <strong>{type}</strong>: {desc}
                   </li>
                 ))}
             </ul>
           </fieldset>
         </div>
       ) : (
-        // Default view: Show meanings for all quiz types in 2x2 grid
         <div className="personality-meanings-container">
           {quizTypes.map((type) => (
             <fieldset key={type} className="personality-meanings">
@@ -420,7 +400,7 @@ const Results = () => {
                   )
                   .map(([personalityType, desc]) => (
                     <li key={personalityType}>
-                      <strong>{personalityType}:</strong> {desc}
+                      <strong>{personalityType}</strong>: {desc}
                     </li>
                   ))}
               </ul>
@@ -429,9 +409,7 @@ const Results = () => {
         </div>
       )}
 
-      {/* Results Section */}
       {quizType && personality ? (
-        // After taking a quiz, show only the current result for the specific quiz type
         <div className="results-box-container">
           <div className="results-box">
             <h2>
@@ -489,7 +467,6 @@ const Results = () => {
           </div>
         </div>
       ) : (
-        // Default view: Show all previous attempts or a message if no valid state
         <div className="results-box-container">
           {quizTypes.map((type) => (
             <div key={type} className="results-box">
