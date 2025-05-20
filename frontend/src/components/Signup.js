@@ -1,38 +1,86 @@
+// src/components/Signup.js
 import React, { useState } from "react";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase";
 import "./Auth.css";
 
 const Signup = ({ onSignupSuccess }) => {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSignup = async (e) => {
-    e.preventDefault();
+  const handleSignup = async () => {
     setIsLoading(true);
     setError("");
+
     if (password !== confirmPassword) {
       setError("Passwords do not match");
       setIsLoading(false);
       return;
     }
+
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      if (onSignupSuccess) {
-        onSignupSuccess();
+      // First, sign up
+      const signupResponse = await fetch(
+        "http://localhost:5000/api/auth/register",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ name, email, password }),
+        }
+      );
+
+      const signupData = await signupResponse.json();
+      if (!signupResponse.ok) {
+        throw new Error(signupData.message || "Signup failed");
       }
-    } catch (error) {
-      setError(error.message || "Failed to create account");
+
+      // Then, log in right after signup
+      const loginResponse = await fetch(
+        "http://localhost:5000/api/auth/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email, password }),
+        }
+      );
+
+      const loginData = await loginResponse.json();
+      if (!loginResponse.ok) {
+        throw new Error(loginData.message || "Auto-login failed");
+      }
+
+      // Store in localStorage
+      localStorage.setItem("token", loginData.token);
+      localStorage.setItem("user", JSON.stringify(loginData.user));
+
+      // Pass user data to parent (App.js)
+      if (onSignupSuccess) onSignupSuccess(loginData.user);
+    } catch (err) {
+      setError(err.message);
     } finally {
       setIsLoading(false);
     }
   };
+  
+  
 
   return (
-    <form onSubmit={handleSignup}>
+    <div>
+      <div className="form-group">
+        <input
+          type="text"
+          placeholder="Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
+        />
+      </div>
       <div className="form-group">
         <input
           type="email"
@@ -61,10 +109,14 @@ const Signup = ({ onSignupSuccess }) => {
         />
       </div>
       {error && <p className="error-message">{error}</p>}
-      <button type="submit" className="auth-button" disabled={isLoading}>
+      <button
+        className="auth-button"
+        onClick={handleSignup}
+        disabled={isLoading}
+      >
         {isLoading ? "Signing up..." : "Sign Up"}
       </button>
-    </form>
+    </div>
   );
 };
 

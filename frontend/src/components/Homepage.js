@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth, googleProvider } from "../firebase";
-import { signInWithPopup } from "firebase/auth";
 import Login from "./Login";
 import Signup from "./Signup";
 import "./Homepage.css";
@@ -11,8 +8,6 @@ const Homepage = ({ user }) => {
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
   const [activeTab, setActiveTab] = useState("login");
-  const [googleError, setGoogleError] = useState("");
-  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
 
   // Slideshow data
@@ -51,13 +46,11 @@ const Homepage = ({ user }) => {
     } else {
       setShowModal(true);
       setActiveTab("login");
-      setGoogleError("");
     }
   };
 
   const closeModal = () => {
     setShowModal(false);
-    setGoogleError("");
     setActiveTab("login");
   };
 
@@ -76,21 +69,6 @@ const Homepage = ({ user }) => {
   const handleModalClick = (e) => {
     if (e.target.className.includes("modal")) {
       closeModal();
-    }
-  };
-
-  // Handle Google Sign-In
-  const handleGoogleSignIn = async () => {
-    setIsGoogleLoading(true);
-    setGoogleError("");
-    try {
-      await signInWithPopup(auth, googleProvider);
-      closeModal();
-      navigate("/quiz-selection");
-    } catch (error) {
-      setGoogleError(error.message || "Failed to sign in with Google");
-    } finally {
-      setIsGoogleLoading(false);
     }
   };
 
@@ -141,17 +119,17 @@ const Homepage = ({ user }) => {
         <div className="highlight-card">
           <span className="highlight-icon">🔍</span>
           <h3>Personality Analysis</h3>
-          <p>Get accurate insights into your personalit trats</p>
+          <p>Get accurate insights into your personality traits</p>
         </div>
         <div className="highlight-card">
           <span className="highlight-icon">🎯</span>
           <h3>Personalized Tips</h3>
-          <p>Receive advice tailord to your unique profile</p>
+          <p>Receive advice tailored to your unique profile</p>
         </div>
         <div className="highlight-card">
           <span className="highlight-icon">⚡</span>
           <h3>Quick & Interactive</h3>
-          <p>Enjoy a fast and enganng quiz experience</p>
+          <p>Enjoy a fast and engaging quiz experience</p>
         </div>
       </div>
 
@@ -216,8 +194,8 @@ const Homepage = ({ user }) => {
               <>
                 <h2>Login to Start Quiz</h2>
                 <Login
-                  onLoginSuccess={() => {
-                    closeModal();
+                  onLoginSuccess={(user) => {
+                    closeModal(user);
                     navigate("/quiz-selection");
                   }}
                 />
@@ -226,21 +204,13 @@ const Homepage = ({ user }) => {
               <>
                 <h2>Sign Up to Start Quiz</h2>
                 <Signup
-                  onSignupSuccess={() => {
-                    closeModal();
-                    navigate("/quiz-selection");
+                  onSignupSuccess={(user) => {
+                    closeModal(user);
+                    navigate("/quiz-selection"); // Changed to redirect to homepage after signup
                   }}
                 />
               </>
             )}
-            <button
-              onClick={handleGoogleSignIn}
-              className="google-btn"
-              disabled={isGoogleLoading}
-            >
-              {isGoogleLoading ? "Loading..." : "Sign in with Google"}
-            </button>
-            {googleError && <p className="error-message">{googleError}</p>}
           </div>
         </div>
       )}

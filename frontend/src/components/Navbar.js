@@ -1,20 +1,13 @@
-
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { signOut } from "firebase/auth";
-import { auth } from "../firebase";
 import "./Navbar.css";
 
-const Navbar = () => {
+const Navbar = ({ user, onLogout }) => {
   const navigate = useNavigate();
 
-  const handleLogout = async () => {
-    try {
-      await signOut(auth);
-      navigate("/login");
-    } catch (error) {
-      console.error("Error logging out:", error);
-    }
+  const handleLogout = () => {
+    onLogout(); // Clear localStorage and reset user state (handled in App.js)
+    navigate("/");
   };
 
   return (
@@ -25,7 +18,7 @@ const Navbar = () => {
         </Link>
       </div>
       <div className="navbar-menu">
-        {auth.currentUser ? (
+        {user ? (
           <>
             <Link to="/" className="nav-item">
               Home
@@ -40,7 +33,12 @@ const Navbar = () => {
               Logout
             </button>
           </>
-        ) : null}
+        ) : (
+          <>
+            {/* Remove Login and Sign Up links entirely */}
+            {/* Optionally, you can add other links here if needed */}
+          </>
+        )}
       </div>
     </nav>
   );

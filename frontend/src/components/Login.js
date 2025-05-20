@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase";
 import "./Auth.css";
 
 const Login = ({ onLoginSuccess }) => {
@@ -9,24 +7,39 @@ const Login = ({ onLoginSuccess }) => {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
+  const handleLogin = async () => {
     setIsLoading(true);
     setError("");
+
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      if (onLoginSuccess) {
-        onLoginSuccess();
+      const response = await fetch("http://localhost:5000/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.message || "Login failed");
       }
-    } catch (error) {
-      setError(error.message || "Invalid email or password");
+
+      // Store token and user info in localStorage
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+
+      // Call onLoginSuccess with user data
+      if (onLoginSuccess) onLoginSuccess(data.user);
+    } catch (err) {
+      setError(err.message);
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <form onSubmit={handleLogin}>
+    <div>
       <div className="form-group">
         <input
           type="email"
@@ -46,10 +59,14 @@ const Login = ({ onLoginSuccess }) => {
         />
       </div>
       {error && <p className="error-message">{error}</p>}
-      <button type="submit" className="auth-button" disabled={isLoading}>
+      <button
+        className="auth-button"
+        onClick={handleLogin}
+        disabled={isLoading}
+      >
         {isLoading ? "Logging in..." : "Login"}
       </button>
-    </form>
+    </div>
   );
 };
 

@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { auth } from "../firebase";
 import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import "./Results.css";
@@ -283,57 +282,103 @@ const Results = () => {
   const answers = location.state?.answers || [];
   const quizType = location.state?.quizType || null;
   const [personality, setPersonality] = useState(null);
-
-  const [userId, setUserId] = useState(null);
   const [allAttempts, setAllAttempts] = useState({
     office: [],
     family: [],
     friendship: [],
     romantic: [],
   });
+  const [error, setError] = useState("");
+  const hasSavedResult = useRef(false); // Prevent duplicate saves
 
   useEffect(() => {
-    if (answers.length > 0 && quizType) {
+    if (answers.length > 0 && quizType && !hasSavedResult.current) {
       const computedPersonality = determinePersonality(answers, quizType);
       setPersonality(computedPersonality);
-    } else {
-      setPersonality(null);
+
+      // Save result to backend
+      const token = localStorage.getItem("token");
+      const user = JSON.parse(localStorage.getItem("user"));
+
+      if (token && user) {
+        hasSavedResult.current = true; // Mark as saved
+        fetch("http://localhost:5000/api/quiz/results", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            userId: user.id,
+            quizType,
+            result: computedPersonality,
+          }),
+        })
+          .then((response) => {
+            if (!response.ok) throw new Error("Failed to save quiz result");
+            return response.json();
+          })
+          .then(() => {
+            // Fetch updated results after saving
+            fetch("http://localhost:5000/api/quiz/results", {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            })
+              .then((response) => {
+                if (!response.ok)
+                  throw new Error("Failed to fetch quiz results");
+                return response.json();
+              })
+              .then((data) => {
+                const updatedAttempts = {
+                  office: [],
+                  family: [],
+                  friendship: [],
+                  romantic: [],
+                };
+                data.forEach((result) => {
+                  updatedAttempts[result.quizType].push(result.result);
+                });
+                setAllAttempts(updatedAttempts);
+              })
+              .catch((err) => setError(err.message));
+          })
+          .catch((err) => setError(err.message));
+      }
     }
   }, [answers, quizType]);
 
   useEffect(() => {
-    const currentUser = auth.currentUser;
-    if (currentUser) {
-      setUserId(currentUser.uid);
-      const quizTypes = ["office", "family", "friendship", "romantic"];
-      const updatedAttempts = { ...allAttempts };
+    const token = localStorage.getItem("token");
+    const user = JSON.parse(localStorage.getItem("user"));
 
-      quizTypes.forEach((type) => {
-        const storedResults =
-          JSON.parse(
-            localStorage.getItem(`quizAttempts_${currentUser.uid}_${type}`)
-          ) || [];
-        updatedAttempts[type] = storedResults;
-      });
-
-      if (personality) {
-        const currentTypeAttempts = updatedAttempts[quizType];
-        if (
-          !currentTypeAttempts.length ||
-          currentTypeAttempts[currentTypeAttempts.length - 1].primaryType !==
-            personality.primaryType
-        ) {
-          updatedAttempts[quizType] = [...currentTypeAttempts, personality];
-          localStorage.setItem(
-            `quizAttempts_${currentUser.uid}_${quizType}`,
-            JSON.stringify(updatedAttempts[quizType])
-          );
-        }
-      }
-
-      setAllAttempts(updatedAttempts);
+    if (token && user) {
+      // Fetch all quiz results for the user on mount
+      fetch("http://localhost:5000/api/quiz/results", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((response) => {
+          if (!response.ok) throw new Error("Failed to fetch quiz results");
+          return response.json();
+        })
+        .then((data) => {
+          const updatedAttempts = {
+            office: [],
+            family: [],
+            friendship: [],
+            romantic: [],
+          };
+          data.forEach((result) => {
+            updatedAttempts[result.quizType].push(result.result);
+          });
+          setAllAttempts(updatedAttempts);
+        })
+        .catch((err) => setError(err.message));
     }
-  }, [personality, quizType]);
+  }, []);
 
   const pieData = (result) =>
     result
@@ -364,6 +409,7 @@ const Results = () => {
 
   return (
     <div className="results-container">
+      {error && <p className="error-message">{error}</p>}
       {quizType ? (
         <div className="personality-meanings-container">
           <fieldset className="personality-meanings">
@@ -529,7 +575,6 @@ const Results = () => {
               )}
             </div>
           ))}
-          {!quizType}
         </div>
       )}
 
