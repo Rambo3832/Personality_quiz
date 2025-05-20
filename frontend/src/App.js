@@ -8,7 +8,7 @@ import {
 } from "react-router-dom";
 import Homepage from "./components/Homepage";
 import QuizSelection from "./components/QuizSelection";
-import Quiz from "./components/Quiz"; // Import the Quiz component
+import Quiz from "./components/Quiz";
 import Results from "./components/Results";
 import Navbar from "./components/Navbar";
 

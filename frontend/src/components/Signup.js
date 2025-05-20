@@ -21,7 +21,7 @@ const Signup = ({ onSignupSuccess }) => {
     }
 
     try {
-      // First, sign up
+      // Sign up
       const signupResponse = await fetch(
         "http://localhost:5000/api/auth/register",
         {
@@ -38,7 +38,7 @@ const Signup = ({ onSignupSuccess }) => {
         throw new Error(signupData.message || "Signup failed");
       }
 
-      // Then, log in right after signup
+      // Auto-login
       const loginResponse = await fetch(
         "http://localhost:5000/api/auth/login",
         {
@@ -59,16 +59,16 @@ const Signup = ({ onSignupSuccess }) => {
       localStorage.setItem("token", loginData.token);
       localStorage.setItem("user", JSON.stringify(loginData.user));
 
-      // Pass user data to parent (App.js)
-      if (onSignupSuccess) onSignupSuccess(loginData.user);
+      // Update parent state
+      if (onSignupSuccess) {
+        onSignupSuccess(loginData.user);
+      }
     } catch (err) {
       setError(err.message);
     } finally {
       setIsLoading(false);
     }
   };
-  
-  
 
   return (
     <div>

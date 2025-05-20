@@ -1,10 +1,11 @@
+// src/components/Homepage.js
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Login from "./Login";
 import Signup from "./Signup";
 import "./Homepage.css";
 
-const Homepage = ({ user }) => {
+const Homepage = ({ user, setUser }) => {
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
   const [activeTab, setActiveTab] = useState("login");
@@ -49,9 +50,13 @@ const Homepage = ({ user }) => {
     }
   };
 
-  const closeModal = () => {
+  const closeModal = (userData) => {
     setShowModal(false);
     setActiveTab("login");
+    if (userData) {
+      setUser(userData); // Update user state in App.js
+      navigate("/quiz-selection"); // Navigate after state update
+    }
   };
 
   // Close modal on Escape key
@@ -196,7 +201,6 @@ const Homepage = ({ user }) => {
                 <Login
                   onLoginSuccess={(user) => {
                     closeModal(user);
-                    navigate("/quiz-selection");
                   }}
                 />
               </>
@@ -206,7 +210,6 @@ const Homepage = ({ user }) => {
                 <Signup
                   onSignupSuccess={(user) => {
                     closeModal(user);
-                    navigate("/quiz-selection"); // Changed to redirect to homepage after signup
                   }}
                 />
               </>
